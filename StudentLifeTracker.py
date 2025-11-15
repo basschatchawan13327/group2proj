@@ -1,4 +1,5 @@
 import json
+import os
 
 DATA_FILE = "student_life.json"
 
@@ -8,14 +9,31 @@ expenses = []
 habits = []
 
 def load_data():
-    global student_sessions,assignments,expenses,habits
-    with open(DATA_FILE, "r") as f:
-        data = json.load(f)
-
+    global student_sessions, assignments, expenses, habits
+    if os.path.exists(DATA_FILE):
+        with open(DATA_FILE, "r") as f:
+            data = json.load(f)
+    
         student_sessions = data.get("student_sessions",[])
         assignments = data.get("assignments",[])
         expenses = data.get("expenses",[])
         habits = data.get("habits",[])
+    else:
+        student_sessions = []
+        assignments = []
+        expenses = []
+        habits = []
+    return student_sessions, assignments, expenses, habits
+
+def save_data(student_sessions, assignments, expenses, habits):
+    data = {
+        "student_sessions": student_sessions,
+        "assignments": assignments,
+        "expenses": expenses,
+        "habits": habits
+    }
+    with open(DATA_FILE, "w") as f:
+        json.dump(data, f, ensure_ascii=False, indent = 4)
 
 while True :
     print("===Student Life Tracker===")
